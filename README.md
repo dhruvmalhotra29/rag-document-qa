@@ -165,3 +165,15 @@ npm run dev
 * Additional document format support
 * More comprehensive retrieval evaluation
 * Production deployment and monitoring
+
+## Demo
+
+**Project Walkthrough Video:** Coming Soon
+
+**Live Application:** Coming Soon
+
+---
+
+## Author
+
+- [@dhruvmalhotra29](https://github.com/dhruvmalhotra29)
