@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Body
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from src.services.text_chunker import chunker_text
 from src.services.embedding import generate_embeddings
@@ -41,6 +41,15 @@ def home():
 
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
+
+    if file.content_type != "application/pdf":
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF files are supported."
+        )
+
+    vector_store.clear()
+    
     file_path = UPLOAD_DIR / file.filename
 
     with open(file_path, "wb") as f:
@@ -63,6 +72,15 @@ async def upload_pdf(file: UploadFile = File(...)):
                 "filename": file.filename
             })
 
+    print("PAGE CHUNKS:", page_chunks)
+    print("NUMBER OF CHUNKS:", len(page_chunks))
+
+    if not page_chunks or not any(chunk["text"].strip() for chunk in page_chunks):
+        raise HTTPException(
+            status_code=400,
+            detail="The PDF contains no extractable text."
+        )
+
     texts = [doc["text"] for doc in page_chunks]
 
     embeddings = generate_embeddings(texts)
@@ -84,6 +102,13 @@ async def upload_pdf(file: UploadFile = File(...)):
 async def query_document(request: QueryRequest):
     question = request.question
     history = request.history
+
+    if not question.strip():
+        return {
+            "question": question,
+            "answer": "Please enter a question.",
+            "sources": []
+        }
 
     history_text = "\n".join(
         f"User: {msg['user']}\nAI: {msg['ai']}"
@@ -135,18 +160,20 @@ async def query_document(request: QueryRequest):
 
     context = "\n\n".join(result["text"] for result in results)
 
-    answer = generate_answer(question, context, history_text)
+    answer, answer_found = generate_answer(question, context, history_text)
+
 
     sources = []
 
-    for result in results:
-        source = {
-            "filename": result["filename"],
-            "page": result["page"]
-        }
+    if answer_found:
+        for result in results:
+            source = {
+                "filename": result["filename"],
+                "page": result["page"]
+            }
 
-        if source not in sources:
-            sources.append(source)
+            if source not in sources:
+                sources.append(source)
 
     return {
         "question": question,

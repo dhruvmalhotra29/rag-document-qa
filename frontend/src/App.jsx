@@ -206,7 +206,7 @@ function App() {
             }
           }}/>
 
-          <button onClick={askQuestion} disabled={loading || !pdfUploaded}>
+          <button onClick={askQuestion} disabled={loading || !pdfUploaded || !question.trim()}>
             {loading ? "Thinking...": "Send"}
           </button>
         </div>

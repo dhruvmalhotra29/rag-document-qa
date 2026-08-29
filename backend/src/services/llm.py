@@ -82,6 +82,13 @@ Question:
 Answer:
 """
 
-    respone = model.generate_content(prompt)
+    response = model.generate_content(prompt)
 
-    return respone.text
+    answer = response.text.strip()
+
+    not_found_message = "I couldn't find that information in the uploaded document."
+
+    if answer == not_found_message:
+        return answer, False
+
+    return answer, True

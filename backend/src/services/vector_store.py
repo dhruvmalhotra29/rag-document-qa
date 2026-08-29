@@ -6,6 +6,7 @@ from sentence_transformers import CrossEncoder
 class VectorStore:
 
     def __init__(self, dimension):
+        self.dimension = dimension
         self.index = faiss.IndexFlatL2(dimension)
         self.documents = []
         self.bm25 = None
@@ -258,3 +259,8 @@ class VectorStore:
     def _tokenize(self, text):
 
         return text.lower().split()
+
+    def clear(self):
+        self.index = faiss.IndexFlatL2(self.dimension)
+        self.documents = []
+        self.bm25 = None
