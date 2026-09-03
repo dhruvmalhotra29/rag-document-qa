@@ -16,18 +16,20 @@ class QueryRequest(BaseModel):
     question: str
     history: list = []
 
+load_dotenv()
+
+allowed_origins = os.getenv(
+    "ALLOWED_ORIGINS"
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
 )
 
-load_dotenv()
 
 UPLOAD_DIR = Path(__file__).parent / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
