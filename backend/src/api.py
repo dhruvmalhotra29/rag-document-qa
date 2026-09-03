@@ -72,8 +72,8 @@ async def upload_pdf(file: UploadFile = File(...)):
                 "filename": file.filename
             })
 
-    print("PAGE CHUNKS:", page_chunks)
-    print("NUMBER OF CHUNKS:", len(page_chunks))
+    #print("PAGE CHUNKS:", page_chunks)
+    #print("NUMBER OF CHUNKS:", len(page_chunks))
 
     if not page_chunks or not any(chunk["text"].strip() for chunk in page_chunks):
         raise HTTPException(
@@ -116,7 +116,7 @@ async def query_document(request: QueryRequest):
     )
 
     retrieval_query = generate_retrieval_query(question,history)
-    print("Retrieval Query", retrieval_query)
+    #print("Retrieval Query", retrieval_query)
     query_embedding = generate_embeddings([retrieval_query])
     
     # Compare FAISS and Hybrid
@@ -134,20 +134,20 @@ async def query_document(request: QueryRequest):
         mode="hybrid"
     )
 
-    print("\n" + "=" * 60)
-    print("QUESTION:", question)
-    print("RETRIEVAL QUERY:", retrieval_query)
-    print("=" * 60)
+    #print("\n" + "=" * 60)
+    #print("QUESTION:", question)
+    #print("RETRIEVAL QUERY:", retrieval_query)
+    #print("=" * 60)
 
-    print("\n--- FAISS RESULTS ---")
-    for i, result in enumerate(faiss_results, 1):
-        print(f"\n{i}. {result['text'][:500]}")
-        print("Page:", result["page"])
+    #print("\n--- FAISS RESULTS ---")
+    #for i, result in enumerate(faiss_results, 1):
+    #    print(f"\n{i}. {result['text'][:500]}")
+    #    print("Page:", result["page"])
 
-    print("\n--- HYBRID RESULTS ---")
-    for i, result in enumerate(hybrid_results, 1):
-        print(f"\n{i}. {result['text'][:500]}")
-        print("Page:", result["page"])
+    #print("\n--- HYBRID RESULTS ---")
+    #for i, result in enumerate(hybrid_results, 1):
+    #    print(f"\n{i}. {result['text'][:500]}")
+    #    print("Page:", result["page"])
 
     # Use Hybrid for the actual RAG answer
     results = hybrid_results
@@ -211,9 +211,9 @@ async def evaluate():
     correct = 0
     k = 3
 
-    print("\n" + "=" * 60)
-    print("RAG RETRIEVAL EVALUATION")
-    print("=" * 60)
+    #print("\n" + "=" * 60)
+    #print("RAG RETRIEVAL EVALUATION")
+    #print("=" * 60)
 
     for test in test_cases:
 
@@ -233,7 +233,7 @@ async def evaluate():
 
         found = False
 
-        print("\nQuestion:", question)
+    #    print("\nQuestion:", question)
 
         for result in results:
 
@@ -242,26 +242,26 @@ async def evaluate():
             if expected.lower() in text:
                 found = True
 
-            print(
-                "Page:",
-                result["page"],
-                "| Match:",
-                expected.lower() in text
-            )
+    #        print(
+    #            "Page:",
+    #            result["page"],
+    #            "| Match:",
+    #            expected.lower() in text
+    #        )
 
         if found:
             correct += 1
 
-        print(
-            "Found:",
-            "YES ✅" if found else "NO ❌"
-        )
+    #    print(
+    #        "Found:",
+    #        "YES ✅" if found else "NO ❌"
+    #    )
 
     recall = correct / len(test_cases)
 
-    print("\n" + "=" * 60)
-    print(f"Recall@{k}: {recall:.2%}")
-    print("=" * 60)
+    #print("\n" + "=" * 60)
+    #print(f"Recall@{k}: {recall:.2%}")
+    #print("=" * 60)
 
     return {
         "recall_at_3": recall,

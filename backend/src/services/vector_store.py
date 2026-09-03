@@ -78,9 +78,9 @@ class VectorStore:
 
         best_distance = distances[0][0]
 
-        print("FAISS best distance:", best_distance)
-        print("FAISS distances:", distances)
-        print("FAISS indexes:", indexes)
+        #print("FAISS best distance:", best_distance)
+        #print("FAISS distances:", distances)
+        #print("FAISS indexes:", indexes)
 
         if best_distance > 1.7:
             return []
@@ -227,13 +227,13 @@ class VectorStore:
             reverse=True
         )
 
-        print("\nCross-Encoder scores:")
+        #print("\nCross-Encoder scores:")
 
-        for doc, score in reranked:
-            print(
-                round(float(score), 4),
-                self._get_text(doc)[:100]
-            )
+        #for doc, score in reranked:
+         #   print(
+          #      round(float(score), 4),
+           #     self._get_text(doc)[:100]
+           # )
 
         # Return final top K
         return [
