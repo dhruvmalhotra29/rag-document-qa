@@ -1,4 +1,9 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi.responses import JSONResponse
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 from fastapi.middleware.cors import CORSMiddleware
 from src.services.text_chunker import chunker_text
 from src.services.embedding import generate_embeddings
@@ -11,6 +16,19 @@ import fitz
 import os
 
 app = FastAPI()
+
+limiter = Limiter(key_func=get_remote_address)
+
+app.state.limiter = limiter
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request, exc):
+    return JSONResponse(
+        status_code=429,
+        content={
+            "detail": "Rate limit reached. Please try again after 1 hour."
+        }
+    )
 
 class QueryRequest(BaseModel):
     question: str
@@ -101,9 +119,10 @@ async def upload_pdf(file: UploadFile = File(...)):
     }
 
 @app.post("/query")
-async def query_document(request: QueryRequest):
-    question = request.question
-    history = request.history
+@limiter.limit("10/hour")
+async def query_document(request: Request, query: QueryRequest):
+    question = query.question
+    history = query.history
 
     if not question.strip():
         return {
