@@ -68,6 +68,15 @@ async def upload_pdf(file: UploadFile = File(...)):
             detail="Only PDF files are supported."
         )
 
+    
+    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+
+    if file.size is not None and file.size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="PDF must be 10 MB or smaller."
+        )
+
     vector_store.clear()
     
     file_path = UPLOAD_DIR / file.filename
