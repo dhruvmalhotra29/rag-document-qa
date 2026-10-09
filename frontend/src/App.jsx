@@ -44,9 +44,10 @@ function App() {
         setUploading(false);
 
     } catch (error) {
-      setStatus("❌ Upload failed");
+      const message =
+        error.response?.data?.detail || "Upload failed";
+      setStatus(`❌ ${message}`);
       setPdfUploaded(false);
-      setUploading(false);
       console.error(error);
     } finally {
       setUploading(false);
@@ -98,9 +99,14 @@ function App() {
       setMessages((prevMessages) => {
       const updatedMessages = [...prevMessages];
 
+      if (error.response?.status === 429) {
+        updatedMessages[updatedMessages.length - 1].ai =
+        error.response.data.detail;
+      } else {
       updatedMessages[updatedMessages.length - 1].ai =
         "❌ Unable to get answer. Please try again.";
-
+      }
+      
       return updatedMessages;
     });
 
