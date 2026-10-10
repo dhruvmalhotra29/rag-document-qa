@@ -166,11 +166,11 @@ npm run dev
 * More comprehensive retrieval evaluation
 * Production deployment and monitoring
 
+
 ## Demo
 
-**Project Walkthrough Video:** Coming Soon
-
-**Live Application:** Coming Soon
+- **Project Walkthrough Video:** [Watch Demo](https://gen-lang-client-0567884138.web.app/)
+- **Live Application:** [Try RAG Document Assistant](https://gen-lang-client-0567884138.web.app/)
 
 ---
 
