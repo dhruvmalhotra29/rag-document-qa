@@ -169,7 +169,7 @@ npm run dev
 
 ## Demo
 
-- **Project Walkthrough Video:** [Watch Demo](https://gen-lang-client-0567884138.web.app/)
+- **Project Walkthrough Video:** [Watch Demo](https://drive.google.com/file/d/1D0GrCAirqs4NiPPayAly64q8CwLLn1si/view?usp=drive_link)
 - **Live Application:** [Try RAG Document Assistant](https://gen-lang-client-0567884138.web.app/)
 
 ---
