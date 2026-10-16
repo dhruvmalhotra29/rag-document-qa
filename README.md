@@ -164,7 +164,6 @@ npm run dev
 * Improved document and metadata management
 * Additional document format support
 * More comprehensive retrieval evaluation
-* Production deployment and monitoring
 
 
 ## Demo
